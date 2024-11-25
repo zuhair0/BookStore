@@ -1,0 +1,69 @@
+﻿@page "/bookstore"
+
+@using BookStore.Model;
+@using BookStore.DAL;
+
+<h3>Customer</h3> 
+<EditForm Model="bookmodel" OnSubmit="SaveBookss">
+    <label>Title: </label>
+    <input type="text" @bind-value="bookmodel.Title" /><br />
+    <label>Author: </label>
+    <input type="text" @bind-value="bookmodel.Author" /><br />
+    <label>Genere: </label>
+    <input type="text" @bind-value="bookmodel.Genere" /><br />
+    <label>Publish Year: </label>
+    <input type="text" @bind-value="bookmodel.Pub_year" /><br />
+    <label>Price: </label>
+    <input type="text" @bind-value="bookmodel.Price" /><br />
+    <button type="submit">Save</button>
+</EditForm>
+
+<table class="tble table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genere</th>
+            <th>Publish Year</th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    @foreach (var item in BookList)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.Author</td>
+            <td>@item.Genere</td>
+            <td>@item.Pub_year</td>
+            <td>@item.Price</td>
+            <td>
+                <button @onclick="(()=>DeleteCustomer(item.Bookid))">Delete</button>
+            </td>
+        </tr>
+    }
+</table>
+
+
+@code {
+    bookStoreModel bookmodel = new bookStoreModel();
+    List<bookStoreModel> BookList = new List<bookStoreModel>();
+    private void SaveBookss()
+    {
+        bookStoreDAL.SaveBook(bookmodel);
+        getbook();
+    }
+    private async void DeleteCustomer(int id)
+    {
+        bookStoreDAL.DeleteBook(id);
+        getbook();
+    }
+    protected override void OnInitialized()
+    {
+        getbook();
+    }
+    private void getbook()
+    {
+        BookList = bookStoreDAL.GetBooks();
+    }
+}
