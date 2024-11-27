@@ -2,48 +2,169 @@
 
 @using BookStore.Model;
 @using BookStore.DAL;
-
-<h3>Customer</h3> 
-<EditForm Model="bookmodel" OnSubmit="SaveBookss">
-    <label>Title: </label>
-    <input type="text" @bind-value="bookmodel.Title" /><br />
-    <label>Author: </label>
-    <input type="text" @bind-value="bookmodel.Author" /><br />
-    <label>Genere: </label>
-    <input type="text" @bind-value="bookmodel.Genere" /><br />
-    <label>Publish Year: </label>
-    <input type="text" @bind-value="bookmodel.Pub_year" /><br />
-    <label>Price: </label>
-    <input type="text" @bind-value="bookmodel.Price" /><br />
-    <button type="submit">Save</button>
-</EditForm>
-
-<table class="tble table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Genere</th>
-            <th>Publish Year</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    @foreach (var item in BookList)
-    {
-        <tr>
-            <td>@item.Title</td>
-            <td>@item.Author</td>
-            <td>@item.Genere</td>
-            <td>@item.Pub_year</td>
-            <td>@item.Price</td>
-            <td>
-                <button @onclick="(()=>DeleteCustomer(item.Bookid))">Delete</button>
-            </td>
-        </tr>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f2f5;
     }
-</table>
 
+    /* Main Container for Flexbox */
+    .main-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    /* Form Styling */
+    .form-container {
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .form-card {
+        background: #ffffff;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 10px;
+        background-color: #1877f2;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .btn-submit:hover {
+            background-color: #145dbf;
+        }
+
+    /* Table Styling */
+    .table-container {
+        flex: 2;
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .styled-table th, .styled-table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .styled-table thead {
+            background-color: #1877f2;
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .styled-table tbody tr:nth-child(even) {
+            background-color: #f3f3f3;
+        }
+
+        .styled-table tbody tr:hover {
+            background-color: #ddd;
+        }
+
+    .btn-delete {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .btn-delete:hover {
+            background-color: #d93636;
+        }
+
+</style>
+<h3>Book Store</h3>
+<div class="main-container">
+    <!-- Form Section -->
+    <div class="form-container">
+        <EditForm Model="bookmodel" OnSubmit="SaveBookss" class="form-card">
+            <label for="title">Title:</label>
+            <input type="text" id="title" @bind-value="bookmodel.Title" class="form-input" /><br />
+
+            <label for="author">Author:</label>
+            <input type="text" id="author" @bind-value="bookmodel.Author" class="form-input" /><br />
+
+            <label for="genere">Genre:</label>
+            <input type="text" id="genere" @bind-value="bookmodel.Genere" class="form-input" /><br />
+
+            <label for="pub_year">Publish Year:</label>
+            <input type="text" id="pub_year" @bind-value="bookmodel.Pub_year" class="form-input" /><br />
+
+            <label for="price">Price:</label>
+            <input type="text" id="price" @bind-value="bookmodel.Price" class="form-input" /><br />
+
+            <button type="submit" class="btn-submit">Save</button>
+        </EditForm>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-container">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Publish Year</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in BookList)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.Author</td>
+                        <td>@item.Genere</td>
+                        <td>@item.Pub_year</td>
+                        <td>@item.Price</td>
+                        <td>
+                            <button class="btn-delete" @onclick="(() => DeleteCustomer(item.Bookid))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 @code {
     bookStoreModel bookmodel = new bookStoreModel();
